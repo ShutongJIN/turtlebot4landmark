@@ -1,12 +1,9 @@
-<mxfile host="app.diagrams.net" modified="2021-04-01T15:17:47.430Z" agent="5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.90 Safari/537.36" etag="rpCvBkZM9vHaE34rWBee" version="14.5.4" type="github">
+<mxfile host="app.diagrams.net" modified="2021-04-01T15:26:37.165Z" agent="5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.90 Safari/537.36" etag="ee8_762vmnf__O4OTUff" version="14.5.4" type="github">
   <diagram id="y9c3MaD4dEhjLZTmsRwH" name="Page-1">
-    <mxGraphModel dx="870" dy="595" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="1740" dy="1190" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
-        <mxCell id="cbadYKQz-kVuSus_xMHX-1" value="Aruco Marker" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
-          <mxGeometry x="670" y="120" width="120" height="60" as="geometry" />
-        </mxCell>
         <mxCell id="cbadYKQz-kVuSus_xMHX-5" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="cbadYKQz-kVuSus_xMHX-3" target="cbadYKQz-kVuSus_xMHX-4">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
@@ -19,11 +16,50 @@
         <mxCell id="cbadYKQz-kVuSus_xMHX-4" value="Save the coordinates and the value of the ArUco Markers" style="whiteSpace=wrap;html=1;rounded=1;" vertex="1" parent="1">
           <mxGeometry x="340" y="190" width="120" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="cbadYKQz-kVuSus_xMHX-6" value="TurtleBot" style="ellipse;whiteSpace=wrap;html=1;rounded=1;" vertex="1" parent="1">
+        <mxCell id="cbadYKQz-kVuSus_xMHX-10" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="cbadYKQz-kVuSus_xMHX-6" target="cbadYKQz-kVuSus_xMHX-9">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="cbadYKQz-kVuSus_xMHX-6" value="Workstation" style="ellipse;whiteSpace=wrap;html=1;rounded=1;" vertex="1" parent="1">
           <mxGeometry x="340" y="320" width="120" height="80" as="geometry" />
         </mxCell>
-        <mxCell id="cbadYKQz-kVuSus_xMHX-8" value="Text" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
-          <mxGeometry x="390" y="260" width="40" height="20" as="geometry" />
+        <mxCell id="cbadYKQz-kVuSus_xMHX-8" value="Save" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="400" y="270" width="40" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="cbadYKQz-kVuSus_xMHX-13" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="cbadYKQz-kVuSus_xMHX-9" target="cbadYKQz-kVuSus_xMHX-12">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="cbadYKQz-kVuSus_xMHX-14" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="cbadYKQz-kVuSus_xMHX-9" target="cbadYKQz-kVuSus_xMHX-3">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="640" y="20" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="600" y="60" />
+              <mxPoint x="400" y="60" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="cbadYKQz-kVuSus_xMHX-9" value="TurtleBot" style="ellipse;whiteSpace=wrap;html=1;rounded=1;" vertex="1" parent="1">
+          <mxGeometry x="540" y="320" width="120" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="cbadYKQz-kVuSus_xMHX-11" value="User&#39;s instructions" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="480" y="335" width="40" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="cbadYKQz-kVuSus_xMHX-17" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="cbadYKQz-kVuSus_xMHX-12" target="cbadYKQz-kVuSus_xMHX-16">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="cbadYKQz-kVuSus_xMHX-12" value="Travel between the ArUco Markers" style="whiteSpace=wrap;html=1;rounded=1;" vertex="1" parent="1">
+          <mxGeometry x="540" y="500" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="cbadYKQz-kVuSus_xMHX-18" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="cbadYKQz-kVuSus_xMHX-16" target="cbadYKQz-kVuSus_xMHX-6">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="cbadYKQz-kVuSus_xMHX-16" value="Check whether the marker is the same as the requested one" style="whiteSpace=wrap;html=1;rounded=1;" vertex="1" parent="1">
+          <mxGeometry x="340" y="500" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="cbadYKQz-kVuSus_xMHX-20" value="Text" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="490" y="310" width="40" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="cbadYKQz-kVuSus_xMHX-21" value="Feedback" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="380" y="450" width="40" height="20" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
