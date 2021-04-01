@@ -32,7 +32,7 @@ Open Source related to TurtleBot 2
 
 
 ## Examples
-currently working on this, and I will fix this later:)
+currently working on this, and we will fix this later:)
 ```c++
 #include <ros/ros.h>
 #include <move_base_msgs/MoveBaseAction.h>
