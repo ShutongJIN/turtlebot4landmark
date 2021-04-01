@@ -13,7 +13,7 @@ In this project, a **kinect turtlebot** is used to map the environment, as well 
 * **Dependancies:** ArUco, Amcl, Rviz, move_base, ...
 
 ### Hardware
-* **Components:** LiDAR Hokuyo, kinect
+* **Components:** LiDAR Hokuyo, Kinect
 * **Other evalution and development systems:** TurtleBot Kobuki base
 
 ## Installation and setup
