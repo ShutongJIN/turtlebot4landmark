@@ -1,6 +1,6 @@
-<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=default"></script>
+<!--script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=default"></script-->
 <!--Note: the above code is used to insert mathematical formula-->
-<!--well but seems likes it is useless, in atom it works-->
+<!--well but seems likes it is useless, in atom it works, but in chrome u probaly have to install a external plugin called MathJax Plugin for Github-->
 # **Landmark Detection Based on TurtleBot**
 
 
@@ -53,3 +53,81 @@ $$p(x_{1:t}|u_{1:t},z_{1:t}) = {\eta}p(z_{t}|x_{t})p(x_{t}|x_{t-1},u_{t})p(x_{1:
 where using $p(x_{1:t-1}|u_{1:t-1},z_{1:t-1})$ to represent the robot trajectory at the previous moment, $p(x_{t}|x_{t-1},u_{t})$ is the kinematic model for propagation so that we can obtain the predicted trajectory of each particle. For each particle after propagation, the observation model $p(z_{t}|x_{t})$ is used for weight calculation and normalization, so that the robot trajectory at that moment is obtained.
 
 But when the detected environment is quite large, we need tons of particles to estimate the pose, which is unreasonable in actual operation. In _GmappingSLAM_, it uses the maximum likelihood estimation to optimize this problem. According to the predicted distribution of the particle's pose and the matching degree with the map, the optimal pose parameter of the particle is found through scanning matching. Then this parameter is used directly as the position of the new particle posture. Through this way, the quality of sampling is highly improved.
+
+### Path planning --- move_base
+
+### Recognizing the landmark---ArUco Marker
+
+## Examples
+### save
+```cpp
+
+```
+
+### simple_navigation_goals.cpp
+In this code, we realized the function of navigating the TurtleBot based on the given instructions, which is the value of the ArUco marker. And the gists of the code is as following:  
+* Transforming the relative coordinates into absolute coordinates, which facilites the navigition.
+* Move_base is used for path planing where absolute coordinates are used.
+* The loop can be terminated through inputing a breaknumer, which is defined in the code.
+
+```c++
+#include <ros/ros.h>
+#include <move_base_msgs/MoveBaseAction.h>
+#include <actionlib/client/simple_action_client.h>
+#include <cstdio>
+
+typedef actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> MoveBaseClient;
+
+int main(int argc, char** argv){
+  //test-array
+  //the first index - value of the ArUco marker
+  //the second index - x in the coordinates
+  //the third index - y in the coordinates
+  int a[6][3]={{0,0,0},{1,1,1},{2,2,2},{3,3,3},{4,-3,-3},{5,0,0}};
+
+  int marker=0;
+  int breaknumer=10;//you can change this later
+  //test-loop
+  //the condition can be changed due to the actual circumstance
+  while(marker!=breaknumber){
+    printf("Please input the value of the landmark:\n");
+    int temp=marker;//temp is used to save the former value
+    //because we are using absolute, not relative, coordinates in this project
+    scanf("%d",&marker);
+    if(marker==breaknmber){
+      break;
+    }
+
+    ros::init(argc, argv, "simple_navigation_goals");
+
+    //tell the action client that we want to spin a thread by default
+    MoveBaseClient ac("move_base", true);
+
+    //wait for the action server to come up
+    while(!ac.waitForServer(ros::Duration(5.0))){
+      ROS_INFO("Waiting for the move_base action server to come up");
+    }
+
+    move_base_msgs::MoveBaseGoal goal;
+
+    goal.target_pose.header.frame_id = "base_link";
+    goal.target_pose.header.stamp = ros::Time::now();
+
+    goal.target_pose.pose.position.x = a[marker][1] - a[temp][1];
+    goal.target_pose.pose.position.y = a[marker][2] - a[temp][2];
+    goal.target_pose.pose.orientation.w = 1.0;
+
+    ROS_INFO("Sending goal");
+    ac.sendGoal(goal);
+
+    ac.waitForResult();
+
+    if(ac.getState() == actionlib::SimpleClientGoalState::SUCCEEDED)
+      printf("Hooray, the base moved %d meter in the direction of x and %d meter in the direction of y\n", a[marker][1],a[marker][2]);
+    else
+      printf("The base failed to move for some reason\n");
+  }
+  printf("Voila! This is the end!\n");
+  return 0;
+}
+```
