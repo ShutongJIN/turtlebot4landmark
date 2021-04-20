@@ -2,7 +2,7 @@
 <!--Note: the above code is used to insert mathematical formula-->
 <!--well but seems likes it is useless, in atom it works, but in chrome u probaly have to install a external plugin called MathJax Plugin for Github-->
 # **Landmark Detection Based on TurtleBot**
-
+Reminder: There exist some math formulas in this report. If you want to browse it properly, probably you have to install a external plugin called MathJax Plugin for Github for chrome browser.
 
 
 
@@ -60,9 +60,7 @@ But when the detected environment is quite large, we need tons of particles to e
 
 ## Examples
 ### save
-```cpp
 
-```
 
 ### simple_navigation_goals.cpp
 In this code, we realized the function of navigating the TurtleBot based on the given instructions, which is the value of the ArUco marker. And the gists of the code is as following:  
@@ -71,6 +69,7 @@ In this code, we realized the function of navigating the TurtleBot based on the 
 * The loop can be terminated through inputing a breaknumer, which is defined in the code.
 
 ```c++
+
 #include <ros/ros.h>
 #include <move_base_msgs/MoveBaseAction.h>
 #include <actionlib/client/simple_action_client.h>
@@ -130,4 +129,5 @@ int main(int argc, char** argv){
   printf("Voila! This is the end!\n");
   return 0;
 }
+
 ```
