@@ -139,7 +139,7 @@ int main(int argc, char **argv)
                 ​
                 x = x * -1;
                 y = y * -1;
-                z = z * -1 + 0.1;//the camera is 0.1 m above the kobuki
+                z = z * -1 - 0.1;//the camera is 0.1 m above the kobuki
                 printf("The Aruco's location in the world reference frame is %lf %lf %lf", x, y,z);
                 // draw axis for each marker
                 for(int i=0; i<ids.size(); i++)
