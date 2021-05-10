@@ -7,7 +7,7 @@ typedef actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> MoveBaseCl
 ​
 int main(int argc, char** argv){
   //test-array
-  //the first index - value of the ArUco marker
+  //the first index - id of the ArUco marker
   //the second index - x in the coordinates
   //the third index - y in the coordinates
   int a[6][3]={{0,0,0},{1,1,1},{2,2,2},{3,3,3},{4,-3,-3},{5,0,0}};
