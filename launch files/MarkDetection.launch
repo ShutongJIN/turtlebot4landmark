@@ -1,0 +1,60 @@
+<launch>
+<!--This launch file is created by Ke and Shutong for mark detection-->
+
+<!--turtlebot_naviation amcl_demo.launch: to load the map-->
+
+  <!-- 3D sensor -->
+  <arg name="3d_sensor" default="$(env TURTLEBOT_3D_SENSOR)"/>  <!-- r200, kinect, asus_xtion_pro -->
+  <include file="$(find turtlebot_bringup)/launch/3dsensor.launch">
+    <arg name="rgb_processing" value="false" />
+    <arg name="depth_registration" value="false" />
+    <arg name="depth_processing" value="false" />
+    
+    <!-- We must specify an absolute topic name because if not it will be prefixed by "$(arg camera)".
+         Probably is a bug in the nodelet manager: https://github.com/ros/nodelet_core/issues/7 --> 
+    <arg name="scan_topic" value="/scan" />
+  </include>
+
+  <!-- Map server -->
+  <arg name="map_file" default="$(env TURTLEBOT_MAP_FILE)"/>
+  <node name="map_server" pkg="map_server" type="map_server" args="$(arg map_file)" />
+
+  <!-- AMCL -->
+  <arg name="custom_amcl_launch_file" default="$(find turtlebot_navigation)/launch/includes/amcl/$(arg 3d_sensor)_amcl.launch.xml"/>
+  <arg name="initial_pose_x" default="0.0"/> <!-- Use 17.0 for willow's map in simulation -->
+  <arg name="initial_pose_y" default="0.0"/> <!-- Use 17.0 for willow's map in simulation -->
+  <arg name="initial_pose_a" default="0.0"/>
+  <include file="$(arg custom_amcl_launch_file)">
+    <arg name="initial_pose_x" value="$(arg initial_pose_x)"/>
+    <arg name="initial_pose_y" value="$(arg initial_pose_y)"/>
+    <arg name="initial_pose_a" value="$(arg initial_pose_a)"/>
+  </include>
+
+  <!-- Move base -->
+  <arg name="custom_param_file" default="$(find turtlebot_navigation)/param/$(arg 3d_sensor)_costmap_params.yaml"/>
+  <include file="$(find turtlebot_navigation)/launch/includes/move_base.launch.xml">
+    <arg name="custom_param_file" value="$(arg custom_param_file)"/>
+  </include>
+
+<!--ArucoMark Detection by using the node called test_cpp in aruco_ros created by Ke and Shutong based on the node called marker_publish.cpp-->
+
+    <arg name="markerSize"      default="0.05"/>    <!-- in m -->
+    <arg name="side"             default="left"/>
+    <arg name="ref_frame"       default="base"/>  <!-- leave empty and the pose will be published wrt param parent_name -->
+    <node pkg="aruco_ros" type="test_cpp" name="test1">
+        <remap from="/camera_info" to="/camera/rgb/camera_info" />
+        <remap from="/image" to="/camera/rgb/image_raw" />
+        <!--remap from="/camera_info" to="/cameras/$(arg side)_hand_camera/camera_info" /-->
+        <!--remap from="/image" to="/cameras/$(arg side)_hand_camera/image" /-->
+        <param name="image_is_rectified" value="True"/>
+        <param name="marker_size"        value="$(arg markerSize)"/>
+        <param name="reference_frame"    value="$(arg ref_frame)"/>   <!-- frame in which the marker pose will be refered -->
+        <param name="camera_frame"       value="$(arg side)_hand_camera"/>
+    </node>
+
+<!--image_view-->
+<node pkg="image_view" type="image_view" name="image_show">
+   <remap from="image" to="/test1/result" />
+</node>
+
+</launch>
