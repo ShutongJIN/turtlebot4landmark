@@ -2,18 +2,17 @@
 <!--Note: the above code is used to insert mathematical formula-->
 <!--well but seems likes it is useless, in atom it works, but in chrome u probaly have to install a external plugin called MathJax Plugin for Github-->
 # **Landmark Detection Based on TurtleBot**
-Reminder: There exist some math formulas in this report. If you want to browse it properly, probably you have to install a external plugin called MathJax Plugin for Github for chrome browser.
-
+<font size=1>Reminder: There exist some math formulas in this report. If you want to browse it properly, a external plugin called MathJax Plugin for Github for chrome browser is recommended.</font>
 
 
 ## Abstract
-In this project, a **kinect turtlebot** is used to map the environment, as well as detect **ArUco markers** and save their coordinates in a 2-dimensional array. Then, on user's request, the turtlebot will go to one of the markers and able to travel between them in the requested order.
+In this project, a **Turtlebot2 with Kinect camera and Hokuyo lidar** is used to map the environment, as well as detect ArUco markers and save their coordinates with their mark ID in a 2-dimensional array. Then, on user's request, the TurtleBot will go to one of the markers and is able to travel between them in the requested order. Based on the framework of ROS, the map construction is found out via the gmapping\_hokuyo\_demo package, which is a integrated package in ROS with a more suitable design to this project based on the Rao-Blackwellized particle filter algorithm. After obtaining the coordinates of the Turtlebot and pose returned from cv::aruco::estimatePoseSingleMarkers, the specific location of the ArUco marker, together with its ID, are save in a 2-dimensional array, on which the future instructions are based. Finally, the movement between different target marker points is accomplished by the ROS navigation framework with the core principle, adaptive Monte Carlo localization.
 
 ## Requirements
 ### Software packages
 * **OS:** ROS Kinetic
 * **Language:** C++
-* **Dependancies:** ArUco, Amcl, Rviz, move_base, ...
+* **Dependancies:** ArUco, Gmapping, Amcl, Rviz, move_base, ...
 
 ### Hardware
 * **Components:** LiDAR Hokuyo, Kinect
@@ -31,7 +30,7 @@ Open Source related to TurtleBot 2
 ...
 
 ## Architecture
-![](./architecture.png)
+![](./figures/architecture.png)
 
 ## Principle
 ### Constructing the map --- gmapping
