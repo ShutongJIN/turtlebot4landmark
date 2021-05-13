@@ -1,6 +1,6 @@
 /*****************************
 Use this cpp file to subscribe the information and store it as array
-Created by Ke
+Created by Ke and Shutong
  ********************************/
 
 #include <iostream>
