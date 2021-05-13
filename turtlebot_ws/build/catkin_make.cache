@@ -1,0 +1,2 @@
+aruco_ros/aruco:aruco_ros/aruco_msgs:aruco_ros/aruco_ros:fiducials/aruco_detect:fiducials/aruco_gazebo:fiducials/fiducial_msgs:fiducials/fiducial_slam:fiducials/fiducials:hokuyo_node:turtlebot_apps/turtlebot_actions:turtlebot_apps/turtlebot_apps:turtlebot_apps/turtlebot_calibration:turtlebot_apps/turtlebot_follower:turtlebot_apps/turtlebot_navigation:turtlebot_apps/turtlebot_rapps
+-DCATKIN_DEVEL_PREFIX=/home/guo/turtlebot_ws/devel -DCMAKE_INSTALL_PREFIX=/home/guo/turtlebot_ws/install -G Unix Makefiles
