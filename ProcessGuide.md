@@ -16,33 +16,47 @@ Here 192.168.1.4 is the IP adress of the turtlebot.
 #### roscore (_Turtlebot_)
 >Start the ROS system
 
+#### The result might be:
+![start](https://github.com/ShutongJIN/turtlebot4landmark/blob/master/figures/Result%20of%20Start.png)
 
 ### 2.2 Construct the map
-#### roslaunch [ConstructMap.launch](https://github.com/ShutongJIN/turtlebot4landmark/blob/master/launch%20files/ConstructMap.launch)
+#### roslaunch [ConstructMap.launch](https://github.com/ShutongJIN/turtlebot4landmark/blob/master/launch%20files/ConstructMap.launch) (_Turtlebot_)
 >Run the launch file to construct the map with the lidar sensor
 
-#### roslaunch turtlebot_teleop keyboard_teleop.launch
+#### roslaunch turtlebot_teleop [keyboard_teleop.launch](https://github.com/ShutongJIN/turtlebot4landmark/blob/master/launch%20files/keyboard_teleop.launch) (_Turtlebot_)
 > Run this module to control the movement of the turtlebot2 with keyboard
 
-#### roslaunch turtlebot_rviz_launchers view_navigation.launch
+#### roslaunch turtlebot_rviz_launchers [view_navigation.launch](https://github.com/ShutongJIN/turtlebot4landmark/blob/master/launch%20files/view_navigation.launch) (_Workstation_)
 > The visualization result on rviz
 
-#### rosrun map_server map_saver -f /tmp/my_map
+#### rosrun map_server map_saver -f /tmp/my_map (_Turtlebot_)
 >Save the map in this path /tmp/my_map
+
+#### The result might be:
+![start](https://github.com/ShutongJIN/turtlebot4landmark/blob/master/figures/Result%20of%20Constructing%20the%20Map.png)
 
 
 ### 2.3 Mark Detection
 
-#### roslaunch [MarkDetection.launch](https://github.com/ShutongJIN/turtlebot4landmark/blob/master/launch%20files/MarkDetection.launch)  map_file:=/temp/my_map.yaml
+#### roslaunch [MarkDetection.launch](https://github.com/ShutongJIN/turtlebot4landmark/blob/master/launch%20files/MarkDetection.launch)  map_file:=/temp/my_map.yaml (_Turtlebot_)
 > Run the launch file to detect the ArUco mark with the Kinect camera
 
-#### rosrun aruco_ros [store_cpp](need a link)
+#### roslaunch turtlebot_teleop [keyboard_teleop.launch](https://github.com/ShutongJIN/turtlebot4landmark/blob/master/launch%20files/keyboard_teleop.launch) (_Turtlebot_)
+> Run this module to control the movement of the turtlebot2 with keyboard
+
+#### rosrun aruco_ros [store_cpp](https://github.com/ShutongJIN/turtlebot4landmark/blob/master/cpp/store.cpp) (_Workstation_)
 > Run this module to see the coordinate and the marker Id
 
+#### The result might be:
+![start](https://github.com/ShutongJIN/turtlebot4landmark/blob/master/figures/Result%20of%20Mark%20Detection.png)
 
 ### 2.4 Navigation
-#### roslaunch turtlebot_rviz_launchers view_navigation.launch
+#### roslaunch turtlebot_navigation [amcl_demo.launch](https://github.com/ShutongJIN/turtlebot4landmark/blob/master/launch%20files/amcl_demo.launch)  map_file:=/temp/my_map.yaml (_Turtlebot_)
+#### roslaunch turtlebot_rviz_launchers [view_navigation.launch](https://github.com/ShutongJIN/turtlebot4landmark/blob/master/launch%20files/view_navigation.launch) (_Workstation_)
 > The visualization route planning on rviz
 
-#### rosrun nav_test_ws [simple_navigation_goals](need a link change the name....)
+#### rosrun nav_test_ws [simple_navigation_goals](https://github.com/ShutongJIN/turtlebot4landmark/blob/master/cpp/navigation.cpp) (_Turtlebot_)
 > Run the navigation module for different target
+
+#### The result might be:
+![start](https://github.com/ShutongJIN/turtlebot4landmark/blob/master/figures/Result%20of%20navigation_rviz.png)
