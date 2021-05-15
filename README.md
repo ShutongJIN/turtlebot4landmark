@@ -2,7 +2,7 @@
 <!--Note: the above code is used to insert mathematical formula-->
 <!--well but seems likes it is useless, in atom it works, but in chrome u probaly have to install a external plugin called MathJax Plugin for Github-->
 # **Landmark Detection Based on TurtleBot**
-<font size=1>_Reminder: There exist some math formulas in this report. If you want to browse it properly, a external plugin called MathJax Plugin for Github for chrome browser is recommended._</font>
+<font size=1>_Reminder: There exist some math formulas in this report. If you want to browse it properly, a external plugin called MathJax Plugin for Github for chrome browser is recommended. The more details can be seen in this **[paper](https://github.com/ShutongJIN/turtlebot4landmark/blob/master/SLAM_and_Landmark_Detection_Based_on_Turtlebot2.pdf)**_</font>
 
 
 ## Abstract
@@ -35,13 +35,12 @@ Open Source related to TurtleBot 2
 </div>
 
 ## Principle
-### Constructing the map --- gmapping
+### Constructing the map --- Gmapping
 When constructing the map, we use one _.launch_ file called _hokuyo_gmapping_demo.launch_, which mainly calls this ROS package
 _[slam_gmapping](http://wiki.ros.org/gmapping)_. This package provides laser-based SLAM (Simultaneous Localization and Mapping), as a ROS node called _slam_gmapping_. By using _slam_gmapping_, we can create a 2-D occupancy grid map (like a building floorplan) from laser and pose data collected by a mobile robot.
 
-Actually, there are several different packages on ROS to achieve the SLAM algorithm, such as _HectorSLAM_, _LagoSLAM_, _KartoSLAM_,etc. But for _GmappingSLAM_, it performs better in a smaller environment and does not need a laser scanner with high update frequency. The advantages and characteristics of _GmappingSLAM_ are consistent with the actual situation of our project. That is the reason why we chose this package.
 
-_GmappingSLAM_ uses an algorithm based on RBPF (Rao-Blackwellized particle filter) to solve the SLAM problem. A complete SLAM problem is to estimate the robot pose and map at the same time with given sensor data. However, if you need to get an accurate pose, you need to match it with the map. If you need to get a good map, you need an accurate pose to do it. Obviously, this is a contradictory problem like _Chicken-and-egg problem_. Explain it in a mathematical way, the SLAM problem can be expressed as the following form:
+_GmappingSLAM_ uses an algorithm based on RBPF (Rao-Blackwellized particle filter) to solve the SLAM problem. The SLAM problem can be expressed  in a mathematical way as the following form:
 $$p(x_{1:t},m|u_{1:t},z_{1:t})$$
 where $z_{1:t}$ is a series of sensor measurement data from bringing up the robot to $t$, $u_{1:t}$ is a series of control data (in ROS typically considered as odom) , and the map information $m$ and the robot trajectory state $x_{1:t}$ are what we want to estimate.
 
@@ -49,7 +48,7 @@ According to probability theory, the above formula can be simplified to:
 $$p(x_{1:t}|u_{1:t},z_{1:t})p(m|x_{1:t},z_{1:t})$$
 In this way, the SLAM problem is reduced to two problems. Among them, the map construction of the known robot pose is a simple problem, so the estimation of the robot pose is a key issue.
 
-In _GmappingSLAM_, it uses particle filtering to estimate the pose of the robot and build a map for each particle. Therefore, each particle contains the robot's trajectory and the corresponding environment map. Here we use Bayesian formula to simplify the calculation of pose. (The specific derivation is quite complicated, here I only explain the results)
+In _GmappingSLAM_, it uses particle filtering to estimate the pose of the robot and build a map for each particle. Therefore, each particle contains the robot's trajectory and the corresponding environment map and uses Bayesian formula to simplify the calculation of pose. (The specific derivation is quite complicated, here I only explain the results)
 $$p(x_{1:t}|u_{1:t},z_{1:t}) = {\eta}p(z_{t}|x_{t})p(x_{t}|x_{t-1},u_{t})p(x_{1:t-1}|u_{1:t-1},z_{1:t-1})$$
 where using $p(x_{1:t-1}|u_{1:t-1},z_{1:t-1})$ to represent the robot trajectory at the previous moment, $p(x_{t}|x_{t-1},u_{t})$ is the kinematic model for propagation so that we can obtain the predicted trajectory of each particle. For each particle after propagation, the observation model $p(z_{t}|x_{t})$ is used for weight calculation and normalization, so that the robot trajectory at that moment is obtained.
 
@@ -153,7 +152,7 @@ After successfully received those data above, we save it in a two-dimension arra
 Based on these, we now have the essential data required by navigation.
 
 ### Navigation
-#### Navigation in ROS
+#### Navigation --- AMCL
 
 In ROS, the navigation is implemented via _amcl\_demo.launch_ file. There are two issues relating to navigation. The first is the global navigation, navigating and locating; the second is local navigation, avoiding obstacles. The specific process of global navigation can be divided into two parts, localizing and moving. AMCL(Adaptive Monte Carlo Localization) is used for localizing and _move\_base_ is used for the movement. The following shows the framework of _move\_base_. It can be seen that the movement plan is also based on localizing. The local navigation is determined by the boundaries of the established map.
 
@@ -161,22 +160,11 @@ In ROS, the navigation is implemented via _amcl\_demo.launch_ file. There are tw
 <img src=./figures/move_base.png style="zoom:40%;"/>
 </div>
 
-### AMCL(Adaptive Monte Carlo Localization
 
-The ability for a robot to locate itself in an environment is a common problem in mobile robots. Adaptive Monte Carlo Localization uses a probabilistic localization technique and particle filters to track the pose of the robot against a map loaded from the map server.
-AMCL is an improved algorithm of Monte Carlo Localization, which can be simply stated as five steps:
+Adaptive Monte Carlo Localization uses a probabilistic localization technique and particle filters to track the pose of the robot against a map loaded from the map server.
+AMCL is an improved algorithm of Monte Carlo Localization, which can be simply stated as five steps: randomly generate a bunch of particles, predict next state of the particles, update the weights, resample and compute estimate.
 
-* _Randomly generate a bunch of particles_: Particles can have position or orientation. Each has a weight (probability) indicating how likely it matches the actual state of the system. Initialize each with the same weight.
-* _Predict next state of the particles_: Move the particles based on how you predict the real system is behaving
-* _Update_: Update the weighting of the particles based on the measurement. Particles that closely match the measurements are weighted higher than particles which don't match the measurements very well.
-* _Resample_: Discard highly improbable particle and replace them with copies of the more probable particles.
-* _Compute Estimate_: Compute weighted mean and covariance of the set of particles to get a state estimate.
-
-
-But there exists a problem. If in the positioning process the particles corresponding to the impossible positions gradually disappear, to a certain extent, only particles near one location can survive. And in case this location happens to be incorrect then the algorithm will fail. This problem is very serious. In fact, any random algorithm like MCL may discard particles near the correct position in the process of resampling. This problem is particularly prominent when the number of particles is small and the distribution range is wide.
-
-
-To solve this problem, AMCL adds the short-term and long-term weight records. If the robot move for a long time, it will get the long-term weight. The short-term weight is for the short-term move. The long-term and short-term weights are maintained to obtain the judgment of whether there is an error resampling. After calculating the value, get the ratio of fast and slow to determine whether to add particles randomly to facilitate subsequent repositioning. The precise pseudocode of AMCL is shown in algorithm.
+AMCL adds the short-term and long-term weight records to reduce the error. The long-term and short-term weights are maintained to obtain the judgment of whether there is an error resampling. After calculating the value, get the ratio of fast and slow to determine whether to add particles randomly to facilitate subsequent repositioning. The precise pseudocode of AMCL is shown in algorithm.
 
 **Algorithm** AMCL(X<sub>t-1<\sub>, u<sub>t}, z_{t}, m)
 ```cpp
@@ -203,40 +191,176 @@ RETURN X<sub>t<\sub>
 ```
 
 
-### Result
+## Process
+<font size=1>_Reminder: For running the ConstructMap.launch file, you have to at least connect the base and the lidar with your laptop. For running the MarkDetection,launch, you have to at least connect the base, the camera and the lidar with your laptop._</font>
 
-The figure shows the Turtlebot2 on the constructed cost-map by using the ROS built-in visualization tools, rviz. The colored square is the scope of the local path planning, and the green clusters of arrows are particle swarm positioning based on AMCL. THe light green line indicates the path planned which the robot will navigate through.
+## 1. Preparation
+##### In order to successfully implement this project, the minimum equipment requirements are two computers, one for the workstation and the other is called turtlebot which is connected with the turtlebot2. You also need a router for the communication between those two terminals. For the turtlebot2, it is better to be equipped with Hokuyo lidar and the Kinect camera.
+
+##### Before starting ROS, You need to make sure the workstation and the turtlebot are connected with the same router. And you have to check IP adress. Then edit the _~/.bashrc_ file for the next step. The specific steps can be viewed in this [document](http://faculty.rwu.edu/mstein/verbiage/EMARO%20Mapping%20Report.pdf), which will not be expanded in this guidance.
+
+## 2. Implementation
+### 2.1 Set the connect between two computers
+<font size=1>_Reminder:  Everytime you want to run the file on the turtlebot, you have to connect it on the workstation by using the folloing command in a new terminal._</font>
+
+#### ssh -X turtle@192.168.1.4(_Workstation_)
+>Set the connect between the workstation and the turtlebot.  
+Here 192.168.1.4 is the IP adress of the turtlebot.
+
+#### roscore (_Turtlebot_)
+>Start the ROS system
+
+#### The result might be:
 <div align=center>
-<img src=./figures/simulation.png style="zoom:40%;"/>
+<img src=./figures/Result of Start style="zoom100%;"/>
+</div>
+
+### 2.2 Construct the map
+#### roslaunch [ConstructMap.launch](https://github.com/ShutongJIN/turtlebot4landmark/blob/master/launch%20files/ConstructMap.launch) (_Turtlebot_)
+>Run the launch file to construct the map with the lidar sensor
+
+#### roslaunch turtlebot_teleop [keyboard_teleop.launch](https://github.com/ShutongJIN/turtlebot4landmark/blob/master/launch%20files/keyboard_teleop.launch) (_Turtlebot_)
+> Run this module to control the movement of the turtlebot2 with keyboard
+
+#### roslaunch turtlebot_rviz_launchers [view_navigation.launch](https://github.com/ShutongJIN/turtlebot4landmark/blob/master/launch%20files/view_navigation.launch) (_Workstation_)
+> The visualization result on rviz
+
+#### rosrun map_server map_saver -f /tmp/my_map (_Turtlebot_)
+>Save the map in this path /tmp/my_map
+
+#### The result might be:
+<div align=center>
+<img src=./figures/Result of Constructing the Map style="zoom100%;"/>
 </div>
 
 
-## Result Analysis and Conclusion
+### 2.3 Mark Detection
 
-Throughout the process of this project, we can notice the following results. In the process of communication between the two hosts, because they use the wireless router communication, the process of sending back information from the turtlebot to the workstation is quite slow, so it is not advisable to control the robot to move fast and it will lose a part of the accuracy when moving fast. At the same time, it is also because of the router, when there is a large obstacle between two computers, the communication will be obstructed. When constructing the map, as shown in the above figure, while encountering some complicated borders (a lot of messy chairs), the map effect is not ideal. In landmark detection part, Kinect camera can detect multiple markers at the same time and return relevant information with high accuracy, but it should be noted that because of the design of ArUco marker, mark detection has some certain requirements for the sharpness of the marker boundary. In the last navigation process, we noticed that there will be errors in the navigation. We noticed that by placing stickers on the target points, which means that although the coordinates of the navigation are reached, in the real laboratory, there exists a  slight error from the specified target. And as the number of navigation increases, the error will also accumulate. We currently think there are two reasons, one is the error of the odometer sensor, this is the error of the hardware which is inevitable. The second reason may be that we have used some coordinate system transforms when determining the coordinates, and the coefficients of these transform matrices are all from the detection of the sensor of Turtlebot2 or our own measurement. There might be some errors. For the elimination of this error, we think it can be solved by machine learning, which will be described in the future work part.
+#### roslaunch [MarkDetection.launch](https://github.com/ShutongJIN/turtlebot4landmark/blob/master/launch%20files/MarkDetection.launch)  map_file:=/temp/my_map.yaml (_Turtlebot_)
+> Run the launch file to detect the ArUco mark with the Kinect camera
 
+#### roslaunch turtlebot_teleop [keyboard_teleop.launch](https://github.com/ShutongJIN/turtlebot4landmark/blob/master/launch%20files/keyboard_teleop.launch) (_Turtlebot_)
+> Run this module to control the movement of the turtlebot2 with keyboard
 
-In this project, we use the robot Turtlebot2 with Hokuyo lidar and Kinect camera to simulate a simple autonomous driving through a modular design. Our method is based on Rao-Blackwellized particle filter, OpenCV and Adaptive Monte Carlo Localization to realize map construction, marker detection and navigation respectively. Our approach computes a highly accurate coordinate of target marker based on the pose estimation with the information given back for sensors. Our approach has been implemented and evaluated on a real situation. Multiple tests with different starting points and target points have demonstrated the robustness of our design and the ability of generating a high quality map in a relatively small environment with less memory space and low hardware requirements of sensor, which has practical significance for indoor navigation and accurate location determination of targets.
+#### rosrun aruco_ros [store_cpp](https://github.com/ShutongJIN/turtlebot4landmark/blob/master/cpp/store.cpp) (_Workstation_)
+> Run this module to see the coordinate and the marker Id
 
-## Future Work
+#### The result might be:
+<div align=center>
+<img src=./figures/Result of Mark Detection style="zoom100%;"/>
+</div>
 
-### Auto SLAM
-The auto SLAM can be interpreted as autonomous localization and mapping. In our project and most cases, the SLAM algorithm still needs to manually control the robot movement to recognize the environment. This is still a bit unsmart. We need to add motion planning to this, or called the path-finding algorithm to achieve the auto SLAM. The local path planning for the current position of the robot based on the sensor information can choose the direction of movement autonomously to avoid obstacles. Because our robor is equipped with a Kinect RGB-D camera. Using the ORB-SLAM algorithm might be considered. ORB-SLAM algorithm is an autonomous localization and mapping algorithm for mobile robot while no prior knowledge of its environment provided. A local 3D point cloud map is constructed, through the depth information acquired from RGB-D sensor and corresponding camera poses estimated from ORB-SLAM, which is then transformed to a 2D occupancy grid map using octree. Based on the 2D map, an information-theoretic exploration algorithm is used to travel through all the environment.\upcite{ref8}
+### 2.4 Navigation
+#### roslaunch turtlebot_navigation [amcl_demo.launch](https://github.com/ShutongJIN/turtlebot4landmark/blob/master/launch%20files/amcl_demo.launch)  map_file:=/temp/my_map.yaml (_Turtlebot_)
+#### roslaunch turtlebot_rviz_launchers [view_navigation.launch](https://github.com/ShutongJIN/turtlebot4landmark/blob/master/launch%20files/view_navigation.launch) (_Workstation_)
+> The visualization route planning on rviz
 
-### Route Planing
+#### rosrun nav_test_ws [simple_navigation_goals](https://github.com/ShutongJIN/turtlebot4landmark/blob/master/cpp/navigation.cpp) (_Turtlebot_)
+> Run the navigation module for different target
 
-At this stage, our navigation only considers entering one target point at a time. If multiple target points are input at one time, how the robot chooses the navigation order of target points is worth discussing. This question not only considers the distance between the target points and the starting point, but also the Id value of the target mark, which makes this question more practical, such as the priority of customers in the delivery process. At present, we are considering using graph theory to solve this problem. First, normalize the Id value of the target point set in order to eliminate the overall influence of the special value and make the algorithm more robust. Multiply it with the distance between the target points, and use this value as the weight of the path between the two points to construct the connectivity graph. Finally, using the Dijkstra algorithm in graph theory to solve this shortest path problem.
-
-### Machine Learning to Improve the Accuracy
-
-As mentioned in the previous result analysis section, there is still room for improvement in the accuracy of the navigation algorithm. We can consider using the most basic algorithm in machine learning, the backpropagation algorithm \upcite{ref9} to reduce errors. We set the values in the transformation matrix as parameters. The distance between the final navigation position and the target position is the loss function. By iteratively adjusting the parameters with appropriate step along the gradient direction to reduce the loss. Finally we can obtain appropriate parameter. However, it should be noted that if there is an over-fitting phenomenon, this algorithm will only be applicable to the scenario of our laboratory, and is not universal. We can use the transfer learning method to solve this. First, to get a rough parameter value in our condition, and then use BP algorithm for training and learning several times in other different environments.
-
-
+#### The result might be:
+<div align=center>
+<img src=./figures/Result of navigation_rviz style="zoom100%;"/>
+</div>
 
 
 ## Examples
-### save
+### Save the coordinate
+```c++
+#include <iostream>
+#include <aruco/aruco.h>
+#include <aruco/cvdrawingutils.h>
 
+#include <ros/ros.h>
+#include <image_transport/image_transport.h>
+#include <cv_bridge/cv_bridge.h>
+#include <sensor_msgs/image_encodings.h>
+#include <aruco_ros/aruco_ros_utils.h>
+#include <aruco_msgs/MarkerArray.h>
+#include <tf/transform_listener.h>
+#include <std_msgs/UInt32MultiArray.h>
+#include <geometry_msgs/PoseWithCovarianceStamped.h>
+
+void markIdCallback(const std_msgs::UInt32MultiArray msg)
+{
+    ROS_INFO("I got mark id:[%d]",msg.data[0]);
+    std::cout<<" markIdCallback run"<<std::endl;
+}
+
+float IdStore(const std_msgs::UInt32MultiArray msg)
+{
+    float id = static_cast<float >(msg.data[0]);
+    return id;
+}
+
+void PoseCallback(const geometry_msgs::PoseWithCovarianceStamped location)
+{
+    ROS_INFO("I got the coordinate:[%f][%f]", location.pose.pose.position.x, location.pose.pose.position.y);
+    std::cout<<" markIdCallback run"<<std::endl;
+}
+
+int Xstore(const geometry_msgs::PoseWithCovarianceStamped location)
+{
+    float x = location.pose.pose.position.x;
+    return x;
+}
+
+int Ystore(const geometry_msgs::PoseWithCovarianceStamped location)
+{
+    float y = location.pose.pose.position.y;
+    return y;
+}
+
+
+int main(int argc, char **argv)
+{
+    int store = 100;
+
+    while (store != 10) {
+        ros::init(argc, argv, "store");
+        ros::NodeHandle nh;
+
+        printf("Do you want to store this coordinate?(If u want to store, please input 1):\n");
+        scanf("%d", &store);
+
+        if (store == 1) {
+            ros::Subscriber id = nh.subscribe("/test1/markers_test_id", 1, markIdCallback);
+
+
+            std::cout << " for store marker id" << std::endl;
+
+            ros::Subscriber pose = nh.subscribe("/amcl_pose", 1, PoseCallback);
+            std::cout << " for store the location" << std::endl;
+
+            //ros::spin();
+
+
+            ros::Rate loop_rate(1);
+            while (ros::ok())
+            {
+                /*...TODO...*/
+
+                ros::spinOnce();
+                loop_rate.sleep();
+            }
+
+
+            //ros::Subscriber a = nh.subscribe("/test1/markers_test_id",10, IdStore);
+            //printf("%d", &a);
+
+
+        } else {
+            printf("please input the valid instruction(input 10 for quit)");
+            scanf("%d", &store);
+            continue;
+        }
+
+
+    }
+    return 0;
+}
+
+```
 
 ### simple_navigation_goals.cpp
 And there is a video for this part: [Check this](https://youtu.be/TdmjeqUmM-0).
