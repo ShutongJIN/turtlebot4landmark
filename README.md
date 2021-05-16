@@ -213,7 +213,7 @@ Here 192.168.1.4 is the IP adress of the turtlebot.
 
 #### The result might be:
 <div align=center>
-<img src=./figures/Result of Start style="zoom100%;"/>
+<img src=./figures/Result_of_Start.png style="zoom100%;"/>
 </div>
 
 ### 2.2 Construct the map
@@ -231,7 +231,7 @@ Here 192.168.1.4 is the IP adress of the turtlebot.
 
 #### The result might be:
 <div align=center>
-<img src=./figures/Result of Constructing the Map style="zoom100%;"/>
+<img src=./figures/Result_of_Constructing_the_Map.png style="zoom100%;"/>
 </div>
 
 
@@ -248,7 +248,7 @@ Here 192.168.1.4 is the IP adress of the turtlebot.
 
 #### The result might be:
 <div align=center>
-<img src=./figures/Result of Mark Detection style="zoom100%;"/>
+<img src=./figures/Result_of_Mark_Detection.png style="zoom100%;"/>
 </div>
 
 ### 2.4 Navigation
@@ -261,7 +261,7 @@ Here 192.168.1.4 is the IP adress of the turtlebot.
 
 #### The result might be:
 <div align=center>
-<img src=./figures/Result of navigation_rviz style="zoom100%;"/>
+<img src=./figures/Result_of_navigation_rviz.png style="zoom100%;"/>
 </div>
 
 
