@@ -1,3 +1,7 @@
+/*****************************
+Use this cpp file to give navigation goals to the TurTleBot
+Created by Shutong JIN
+ ********************************/
 #include <ros/ros.h>
 #include <move_base_msgs/MoveBaseAction.h>
 #include <actionlib/client/simple_action_client.h>
