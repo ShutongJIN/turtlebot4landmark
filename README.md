@@ -265,7 +265,7 @@ Here 192.168.1.4 is the IP adress of the turtlebot.
 </div>
 
 ## Conclusion
-In this project, we have successfully built the configuration of the hardware environment, as well as the ros packages. At first, we constructed a map, which is used for the later navigation. As for ArUco marker, the relative recognition, pose estimation and coordinate transformation have been relized. However, due to a tight schedule, we didn't realized the function of saving the coordinates transformed from the _coordiantes_transformation.cpp_. And we have to save the coordiantes manually. **For this part** With respect to navigation, all funtions have been achieved successfully, including sending navigation goals and automatic trajectory planning.
+In this project, we have successfully built the configuration of the hardware environment, as well as the ros packages. At first, we constructed a map, which is used for the later navigation. As for ArUco marker, the relative recognition, pose estimation and coordinate transformation have been relized. However, due to a tight schedule, we didn't realized the function of saving the coordinates transformed from the _coordiantes_transformation.cpp_. And we have to save the coordiantes manually. For this part, we plan to add another parameter to the _subscribe_ function to record the return value of the subscribed topic. With respect to navigation, all funtions have been achieved successfully, including sending navigation goals and automatic trajectory planning.
 ## Examples
 ### Save the coordinate
 ```c++
